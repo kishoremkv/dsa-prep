@@ -1,59 +1,46 @@
-#include <iostream>
-#include <climits> // For INT_MAX
-
 class MinStack {
-private:
-    int a[1000];       // Array to store stack elements
-    int min[1000];     // Array to store minimum elements
-    int topIndex;      // Pointer to the top of the stack
-
 public:
-    // Constructor to initialize the stack
+
+    struct Node {
+        int val;
+        int min_val;
+    };
+    stack<Node*> s;
     MinStack() {
-        topIndex = -1; // Empty stack
+        s.empty();
+        
     }
-
-    // Push operation
+    //
     void push(int val) {
-        if (topIndex < 999) { // Check for stack overflow
-            topIndex++;
-            a[topIndex] = val;
-            if (topIndex == 0) {
-                min[topIndex] = val; // First element is the minimum
-            } else {
-                min[topIndex] = std::min(val, min[topIndex - 1]); // Update the minimum
-            }
-        } else {
-            std::cout << "Stack Overflow" << std::endl;
+        Node *n = new Node();
+        n->val = val;
+        n->min_val = val;
+        if(!s.empty())
+        {
+            Node *top = s.top();
+            n->min_val = min(n->min_val, top->min_val);
         }
+        s.push(n);
     }
-
-    // Pop operation
+    
     void pop() {
-        if (topIndex >= 0) { // Check for stack underflow
-            topIndex--;
-        } else {
-            std::cout << "Stack Underflow" << std::endl;
-        }
+        s.pop();
     }
-
-    // Top operation
+    
     int top() {
-        if (topIndex >= 0) {
-            return a[topIndex];
-        } else {
-            std::cout << "Stack is empty" << std::endl;
-            return INT_MIN; // Return an invalid value for empty stack
-        }
+        return s.top()->val;
     }
-
-    // GetMin operation
+    
     int getMin() {
-        if (topIndex >= 0) {
-            return min[topIndex];
-        } else {
-            std::cout << "Stack is empty" << std::endl;
-            return INT_MIN; // Return an invalid value for empty stack
-        }
+        return s.top()->min_val;
     }
 };
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack* obj = new MinStack();
+ * obj->push(val);
+ * obj->pop();
+ * int param_3 = obj->top();
+ * int param_4 = obj->getMin();
+ */
